@@ -1,37 +1,56 @@
-import { View, ViewStyle, FlatList } from "react-native"
-import { FC } from "react"
-import { ThemedStyle } from "../../../theme"
-import { Text } from "../../../components"
-import { useAppTheme } from "../../../utils/useAppTheme"
-import { Announcement } from "../types"
+import {
+  View,
+  ViewStyle,
+  FlatList,
+  TouchableOpacity,
+  TextStyle,
+} from 'react-native';
+import { FC } from 'react';
+import { ThemedStyle } from '../../../theme';
+import { Text } from '../../../components';
+import { useAppTheme } from '../../../utils/useAppTheme';
+import { Announcement } from '../types';
+import { Ionicons } from '@expo/vector-icons';
 
 interface AnnouncementListProps {
-  announcements?: Announcement[]
+  announcements?: Announcement[];
+  onDelete?: (id: string) => void;
 }
 
-const AnnouncementList: FC<AnnouncementListProps> = ({ announcements }) => {
-  const { themed } = useAppTheme()
+const AnnouncementList: FC<AnnouncementListProps> = ({
+  announcements,
+  onDelete,
+}) => {
+  const { themed } = useAppTheme();
 
   const renderAnnouncement = ({ item }: { item: Announcement }) => (
     <View style={themed($announcementCard)}>
       <View style={themed($announcementHeader)}>
-        <Text text={item.title} preset="heading" style={themed($title)} />
-        <View style={themed($typeBadge)}>
-          <Text text={item.type === "search" ? "Пошук" : "Пропозиція"} style={themed($typeText)} />
+        <Text text={item.title} preset='heading' style={themed($title)} />
+        <View style={themed($headerRight)}>
+          <View style={themed($typeBadge)}>
+            <Text
+              text={item.type === 'search' ? 'Пошук' : 'Пропозиція'}
+              style={themed($typeText)}
+            />
+          </View>
         </View>
       </View>
       <Text text={item.description} style={themed($description)} />
       <View style={themed($requirementsList)}>
         {item.listOfRequirementsOrServices.map((req, index) => (
           <View key={index} style={themed($requirementItem)}>
-            <Text text="•" style={themed($bulletPoint)} />
+            <Text text='•' style={themed($bulletPoint)} />
             <Text text={req} style={themed($requirementText)} />
           </View>
         ))}
       </View>
-      <Text text={new Date(item.createdAt).toLocaleDateString("uk-UA")} style={themed($date)} />
+      <Text
+        text={new Date(item.createdAt).toLocaleDateString('uk-UA')}
+        style={themed($date)}
+      />
     </View>
-  )
+  );
 
   return (
     <FlatList
@@ -41,14 +60,14 @@ const AnnouncementList: FC<AnnouncementListProps> = ({ announcements }) => {
       contentContainerStyle={themed($listContainer)}
       ListFooterComponent={<View style={themed($footer)} />}
     />
-  )
-}
+  );
+};
 
-export default AnnouncementList
+export default AnnouncementList;
 
 const $listContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   //   padding: spacing.md,
-})
+});
 
 const $announcementCard: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   backgroundColor: colors.palette.neutral100,
@@ -57,60 +76,70 @@ const $announcementCard: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   marginBottom: spacing.md,
   borderWidth: 1,
   borderColor: colors.border,
-})
+});
 
 const $announcementHeader: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   marginBottom: spacing.sm,
-})
+});
 
-const $title: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+const $headerRight: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: spacing.sm,
+});
+
+const $title: ThemedStyle<TextStyle> = ({ spacing }) => ({
   flex: 1,
   marginRight: spacing.sm,
-})
+});
 
 const $typeBadge: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   backgroundColor: colors.palette.accent500,
   paddingHorizontal: spacing.sm,
   paddingVertical: spacing.xs,
   borderRadius: 6,
-})
+});
 
-const $typeText: ThemedStyle<ViewStyle> = ({ colors }) => ({
+const $typeText: ThemedStyle<TextStyle> = ({ colors }) => ({
   color: colors.palette.neutral100,
   fontSize: 12,
-  fontWeight: "600",
-})
+  fontWeight: '600',
+});
 
-const $description: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+const $deleteButton: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  padding: spacing.xs,
+});
+
+const $description: ThemedStyle<TextStyle> = ({ spacing }) => ({
   marginBottom: spacing.md,
-})
+});
 
 const $requirementsList: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   marginBottom: spacing.md,
-})
+});
 
 const $requirementItem: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  flexDirection: "row",
-  alignItems: "center",
+  flexDirection: 'row',
+  alignItems: 'center',
   marginBottom: spacing.xs,
-})
+});
 
-const $bulletPoint: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+const $bulletPoint: ThemedStyle<TextStyle> = ({ spacing }) => ({
   marginRight: spacing.xs,
-})
+});
 
-const $requirementText: ThemedStyle<ViewStyle> = () => ({
+const $requirementText: ThemedStyle<TextStyle> = () => ({
   flex: 1,
-})
+});
 
-const $date: ThemedStyle<ViewStyle> = ({ colors }) => ({
+const $date: ThemedStyle<TextStyle> = ({ colors }) => ({
   color: colors.textDim,
   fontSize: 12,
-})
+});
 
 const $footer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   height: 150,
-})
+});

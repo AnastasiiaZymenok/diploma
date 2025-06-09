@@ -5,6 +5,15 @@
  *
  * https://reactnative.dev/docs/security#storing-sensitive-info
  */
+import { Platform } from 'react-native';
+
+const getApiUrl = () => {
+  if (Platform.OS === 'android') {
+    return 'http://10.0.2.2:3000';
+  }
+  return 'http://localhost:3000';
+};
+
 export default {
-  API_URL: "https://api.rss2json.com/v1/",
-}
+  API_URL: getApiUrl(),
+};

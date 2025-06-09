@@ -71,9 +71,7 @@
         "isPublic": true
       }
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    }
+    "runtimeVersion": "1.0.0"
   },
   "ignite": {
     "version": "10.5.3"

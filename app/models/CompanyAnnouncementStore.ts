@@ -1,8 +1,8 @@
-import { types, Instance, flow } from "mobx-state-tree"
-import { CompanyAnnouncement } from "./CompanyAnnouncement"
+import { types, Instance, flow } from 'mobx-state-tree';
+import { CompanyAnnouncement } from './CompanyAnnouncement';
 
 export const CompanyAnnouncementStoreModel = types
-  .model("CompanyAnnouncementStore")
+  .model('CompanyAnnouncementStore')
   .props({
     announcements: types.array(types.frozen<CompanyAnnouncement>()),
     isLoading: types.optional(types.boolean, false),
@@ -10,41 +10,45 @@ export const CompanyAnnouncementStoreModel = types
   })
   .actions((store) => {
     const setAnnouncements = (announcements: CompanyAnnouncement[]) => {
-      store.announcements.replace(announcements)
-    }
+      store.announcements.replace(announcements);
+    };
 
     const addAnnouncement = (announcement: CompanyAnnouncement) => {
-      store.announcements.push(announcement)
-    }
+      store.announcements.push(announcement);
+    };
 
     const removeAnnouncement = (id: string) => {
-      const index = store.announcements.findIndex((a) => a.id === id)
+      const index = store.announcements.findIndex((a) => a.id === id);
       if (index !== -1) {
-        store.announcements.splice(index, 1)
+        store.announcements.splice(index, 1);
       }
-    }
+    };
 
     const setLoading = (loading: boolean) => {
-      store.isLoading = loading
-    }
+      store.isLoading = loading;
+    };
 
     const setError = (error: string | undefined) => {
-      store.error = error
-    }
+      store.error = error;
+    };
 
     const fetchAnnouncements = flow(function* () {
       try {
-        setLoading(true)
-        setError(undefined)
+        setLoading(true);
+        setError(undefined);
         // TODO: Implement API call here
         // const response = yield api.getAnnouncements()
         // setAnnouncements(response.data)
       } catch (error) {
-        setError(error instanceof Error ? error.message : "Failed to fetch announcements")
+        setError(
+          error instanceof Error
+            ? error.message
+            : 'Failed to fetch announcements'
+        );
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    })
+    });
 
     return {
       setAnnouncements,
@@ -53,7 +57,8 @@ export const CompanyAnnouncementStoreModel = types
       setLoading,
       setError,
       fetchAnnouncements,
-    }
-  })
+    };
+  });
 
-export interface CompanyAnnouncementStore extends Instance<typeof CompanyAnnouncementStoreModel> {}
+export interface CompanyAnnouncementStore
+  extends Instance<typeof CompanyAnnouncementStoreModel> {}

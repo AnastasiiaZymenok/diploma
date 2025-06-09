@@ -4,18 +4,18 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import { NavigationContainer } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { observer } from "mobx-react-lite"
-import * as Screens from "@/screens"
-import Config from "../config"
-import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
-import { useAppTheme } from "@/utils/useAppTheme"
-import { ComponentProps } from "react"
-import { AuthNavigator } from "./AuthNavigator"
-import { BaseNavigator } from "./BaseNavigator"
-import { useStores } from "@/models"
-import { useEffect } from "react"
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { observer } from 'mobx-react-lite';
+import * as Screens from '@/screens';
+import Config from '../config';
+import { navigationRef, useBackButtonHandler } from './navigationUtilities';
+import { useAppTheme } from '@/utils/useAppTheme';
+import { ComponentProps } from 'react';
+import { AuthNavigator } from './AuthNavigator';
+import { BaseNavigator } from './BaseNavigator';
+import { useStores } from '@/models';
+import { useEffect } from 'react';
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -31,36 +31,37 @@ import { useEffect } from "react"
  *   https://reactnavigation.org/docs/typescript/#organizing-types
  */
 export type AppStackParamList = {
-  Auth: undefined
-  Base: undefined
-  Welcome: undefined
+  Auth: undefined;
+  Base: undefined;
+  Welcome: undefined;
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
-}
+};
 
 /**
  * This is a list of all the route names that will exit the app if the back button
  * is pressed while in that screen. Only affects Android.
  */
-const exitRoutes = Config.exitRoutes
+const exitRoutes = Config.exitRoutes;
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
-const Stack = createNativeStackNavigator<AppStackParamList>()
+const Stack = createNativeStackNavigator<AppStackParamList>();
 
 const AppStack = observer(function AppStack() {
-  const { authStore } = useStores()
+  const { authStore } = useStores();
   const {
     theme: { colors },
-  } = useAppTheme()
+  } = useAppTheme();
 
   useEffect(() => {
+    console.log('restore auth useEffect');
     const restoreAuth = async () => {
-      await authStore.restoreAuthState()
-    }
-    restoreAuth()
-  }, [])
+      await authStore.restoreAuthState();
+    };
+    restoreAuth();
+  }, []);
 
-  console.log("authStore.isAuthenticated", authStore.isAuthenticated)
+  console.log('authStore.isAuthenticated', authStore.isAuthenticated);
 
   return (
     <Stack.Navigator
@@ -73,25 +74,29 @@ const AppStack = observer(function AppStack() {
       }}
     >
       {authStore.isAuthenticated ? (
-        <Stack.Screen name="Base" component={BaseNavigator} />
+        <Stack.Screen name='Base' component={BaseNavigator} />
       ) : (
         <>
           {/* <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} /> */}
-          <Stack.Screen name="Auth" component={AuthNavigator} />
+          <Stack.Screen name='Auth' component={AuthNavigator} />
         </>
       )}
 
       {/** 🔥 Your screens go here */}
       {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
-  )
-})
+  );
+});
 
 export interface NavigationProps
-  extends Partial<ComponentProps<typeof NavigationContainer<AppStackParamList>>> {}
+  extends Partial<
+    ComponentProps<typeof NavigationContainer<AppStackParamList>>
+  > {}
 
-export const AppNavigator = observer(function AppNavigator(props: NavigationProps) {
-  useBackButtonHandler(canExit)
+export const AppNavigator = observer(function AppNavigator(
+  props: NavigationProps
+) {
+  useBackButtonHandler(canExit);
 
   return (
     <NavigationContainer ref={navigationRef} {...props}>
@@ -99,8 +104,8 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
         <AppStack />
       </Screens.ErrorBoundary>
     </NavigationContainer>
-  )
-})
+  );
+});
 
 /**
  * A list of routes from which we're allowed to leave the app when
@@ -115,5 +120,5 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
  * @see https://reactnavigation.org/docs/navigating-without-navigation-prop/
  */
 export function canExit(routeName: string) {
-  return exitRoutes.includes(routeName)
+  return exitRoutes.includes(routeName);
 }
