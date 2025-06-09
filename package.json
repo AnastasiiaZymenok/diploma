@@ -95,6 +95,5 @@
   },
   "engines": {
     "node": "^18.18.0 || >=20.0.0"
-  },
-  "packageManager": "yarn@3.6.4"
+  }
 }
