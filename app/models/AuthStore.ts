@@ -4,6 +4,7 @@ import {
   SnapshotOut,
   types,
   flow,
+  getRoot,
 } from 'mobx-state-tree';
 import { withSetPropAction } from './helpers/withSetPropAction';
 import {
@@ -14,6 +15,7 @@ import {
   validatePasswordMatch,
   getSecureData,
 } from '@/utils/validation';
+import { RootStoreModel } from './RootStore';
 
 export const AuthStoreModel = types
   .model('AuthStore')
@@ -145,6 +147,15 @@ export const AuthStoreModel = types
             setEmail(data.data.company.email);
             setAuthenticated(true);
 
+            // Set company info from response data
+            const root = getRoot<Instance<typeof RootStoreModel>>(self);
+            root.companyStore.setCompanyInfo({
+              name: data.data.company.name,
+              email: data.data.company.email,
+              industry: data.data.company.industry,
+              description: data.data.company.description,
+            });
+
             return true;
           }
 
@@ -225,6 +236,16 @@ export const AuthStoreModel = types
             setUserId(data.data.company.id.toString());
             setEmail(data.data.company.email);
             setAuthenticated(true);
+
+            // Set company info from response data
+            const root = getRoot<Instance<typeof RootStoreModel>>(self);
+            root.companyStore.setCompanyInfo({
+              name: data.data.company.name,
+              email: data.data.company.email,
+              industry: data.data.company.industry,
+              description: data.data.company.description,
+            });
+
             return true;
           }
 

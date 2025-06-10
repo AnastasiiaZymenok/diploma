@@ -11,6 +11,9 @@ import { Text } from '../../../components';
 import { useAppTheme } from '../../../utils/useAppTheme';
 import { Announcement } from '../types';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BaseStackParamList } from '../../../navigators/BaseNavigator';
 
 interface AnnouncementListProps {
   announcements?: Announcement[];
@@ -21,10 +24,20 @@ const AnnouncementList: FC<AnnouncementListProps> = ({
   announcements,
   onDelete,
 }) => {
-  const { themed } = useAppTheme();
+  const { themed, theme } = useAppTheme();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<BaseStackParamList>>();
+
+  const handlePress = (announcement: Announcement) => {
+    navigation.navigate('AnnouncementDetails', { announcement });
+  };
 
   const renderAnnouncement = ({ item }: { item: Announcement }) => (
-    <View style={themed($announcementCard)}>
+    <TouchableOpacity
+      style={themed($announcementCard)}
+      onPress={() => handlePress(item)}
+      activeOpacity={0.7}
+    >
       <View style={themed($announcementHeader)}>
         <Text text={item.title} preset='heading' style={themed($title)} />
         <View style={themed($headerRight)}>
@@ -36,20 +49,34 @@ const AnnouncementList: FC<AnnouncementListProps> = ({
           </View>
         </View>
       </View>
-      <Text text={item.description} style={themed($description)} />
+      <Text
+        text={item.description}
+        style={themed($description)}
+        numberOfLines={2}
+      />
       <View style={themed($requirementsList)}>
-        {item.listOfRequirementsOrServices.map((req, index) => (
+        {item.listOfRequirementsOrServices.slice(0, 2).map((req, index) => (
           <View key={index} style={themed($requirementItem)}>
             <Text text='•' style={themed($bulletPoint)} />
-            <Text text={req} style={themed($requirementText)} />
+            <Text
+              text={req}
+              style={themed($requirementText)}
+              numberOfLines={1}
+            />
           </View>
         ))}
+        {item.listOfRequirementsOrServices.length > 2 && (
+          <Text
+            text={`+${item.listOfRequirementsOrServices.length - 2} більше`}
+            style={themed($moreText)}
+          />
+        )}
       </View>
       <Text
         text={new Date(item.createdAt).toLocaleDateString('uk-UA')}
         style={themed($date)}
       />
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -66,7 +93,7 @@ const AnnouncementList: FC<AnnouncementListProps> = ({
 export default AnnouncementList;
 
 const $listContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  //   padding: spacing.md,
+  // padding: spacing.md,
 });
 
 const $announcementCard: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
@@ -135,11 +162,17 @@ const $requirementText: ThemedStyle<TextStyle> = () => ({
   flex: 1,
 });
 
+const $moreText: ThemedStyle<TextStyle> = ({ colors }) => ({
+  color: colors.textDim,
+  fontSize: 12,
+  marginTop: 4,
+});
+
 const $date: ThemedStyle<TextStyle> = ({ colors }) => ({
   color: colors.textDim,
   fontSize: 12,
 });
 
 const $footer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  height: 150,
+  height: 200,
 });
