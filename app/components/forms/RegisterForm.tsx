@@ -7,7 +7,16 @@ import { useAppTheme } from '@/utils/useAppTheme';
 import { ThemedStyle } from '../../theme';
 
 interface RegisterFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (props: {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    companyName: string;
+    description: string;
+    industry: string;
+    foundedYear: string;
+    services: string[];
+  }) => void;
   style?: ViewStyle;
 }
 
@@ -48,25 +57,34 @@ export const RegisterForm: FC<RegisterFormProps> = observer(
       } else {
         // Complete registration with company data
         try {
-          const success = await authStore.register(
+          // const success = await authStore.register(
+          //   email,
+          //   password,
+          //   confirmPassword,
+          //   {
+          //     name: companyName,
+          //     email,
+          //     description,
+          //     industry,
+          //     foundedYear: parseInt(foundedYear, 10),
+          //     services,
+          //   }
+          // );
+
+          // console.log(success);
+
+          // if (success) {
+          onSuccess?.({
             email,
             password,
             confirmPassword,
-            {
-              name: companyName,
-              email,
-              description,
-              industry,
-              foundedYear: parseInt(foundedYear, 10),
-              services,
-            }
-          );
-
-          console.log(success);
-
-          if (success) {
-            onSuccess?.();
-          }
+            companyName,
+            description,
+            industry,
+            foundedYear,
+            services,
+          });
+          // }
         } catch (error) {
           console.error('Registration failed:', error);
         }
